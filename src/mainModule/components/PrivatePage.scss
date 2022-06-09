@@ -1,0 +1,34 @@
+.privatePageContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.smsBlock {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+    overflow-y: auto;
+    margin: 20px;
+    padding: 10px;
+    background-color: aliceblue;
+    border: 2px solid grey;
+    scroll-behavior: auto;
+}
+
+.sms {
+    background-color: aqua;
+    padding: 5px 10px;
+    color: blueviolet;
+    border-radius: 10px;
+    margin: 5px 10px;
+    width: fit-content;
+    max-width: 80%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    word-break: break-word;
+}
+
+.userSms {
+    align-self: flex-end;
+}

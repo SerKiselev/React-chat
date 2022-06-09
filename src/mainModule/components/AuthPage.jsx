@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { Layout } from './Layout.jsx';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+
 import './AuthPage.scss';
 
 export const AuthPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [displayName, setDisplayName] = useState('');
+    const auth = getAuth(); // fix
 
     const isLoginPage = window.location.pathname === '/login';
 
@@ -16,12 +20,25 @@ export const AuthPage = () => {
         setPassword(e.target.value);
     }
 
-    const handleSubmitForm = (e) => {
+    const handleDisplayNameChange = (e) => {
+        setDisplayName(e.target.value);
+    }
+
+    const handleSubmitForm = async (e) => {
         e.preventDefault();
 
-        // if (isLoginPage) return login actions
+        try {
+            if (!isLoginPage) {
+                const { user } = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(auth.currentUser, { displayName });
+            } else {
+                const { user } = await signInWithEmailAndPassword(auth, email, password);
+            }
 
-        // Registration actions
+        } catch (error) {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        }
     }
 
     return (
@@ -30,19 +47,26 @@ export const AuthPage = () => {
                 <div className='authPageFormContainer'>
                     <p>{isLoginPage ? 'Login' : 'Registration'}</p>
                     <form className='authPageForm' onSubmit={handleSubmitForm}>
-                        <input 
-                            className='authPageEmailField' 
-                            type='email' 
+                        <input
+                            className='authPageEmailField'
+                            type='email'
                             placeholder='Type Email'
-                            value={email} 
-                            onChange={handleEmailChange} 
+                            value={email}
+                            onChange={handleEmailChange}
                         />
-                        <input 
-                            className='authPagePasswordField' 
+                        <input
+                            className='authPagePasswordField'
                             type='password'
                             placeholder='Type Password'
                             value={password}
-                            onChange={handlePasswordChange} 
+                            onChange={handlePasswordChange}
+                        />
+                        <input
+                            className='authPagePasswordField' // fix this
+                            type='text'
+                            placeholder='Type Your Name'
+                            value={displayName}
+                            onChange={handleDisplayNameChange}
                         />
                         <button>Send</button>
                     </form>
